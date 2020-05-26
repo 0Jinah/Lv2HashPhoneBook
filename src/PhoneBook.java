@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 public class PhoneBook {
@@ -37,7 +39,7 @@ public class PhoneBook {
 
         for (int i = 0; i < phone_book.length; i++) {
             // 선행 반복에서 answer가 false 된 경우 반복 종료
-            if(!answer){
+            if (!answer) {
                 break;
             }
 
@@ -91,11 +93,37 @@ public class PhoneBook {
     }
 
 
+    /***
+     * Solution3: HashSet 이용
+     * @param phone_book
+     * @return
+     */
+    public boolean solution3(String[] phone_book) {
+        HashSet<String> hashSet = new HashSet<>();
+
+        //Arrays.sort(phone_book, Comparator.comparingInt(String::length).reversed());
+        Arrays.sort(phone_book, (o1, o2) -> o2.length() - o1.length());
+
+        for(String phone: phone_book){
+            if(hashSet.contains(phone)){
+                return false;
+            }
+
+            for(int i = 1; i< phone.length(); i++) {
+                hashSet.add(phone.substring(0, i));
+            }
+        }
+
+        return true;
+    }
+
+
     public static void main(String[] args) {
         String[] phone_book = {"119", "97674223", "1195524421"};
         PhoneBook pb = new PhoneBook();
-        System.out.println("solution1 : " + pb.solution1(phone_book));
-        System.out.println("solution2 : " + pb.solution2(phone_book));
+        //System.out.println("solution1 : " + pb.solution1(phone_book));
+        //System.out.println("solution2 : " + pb.solution2(phone_book));
+        System.out.println("solution3 : " + pb.solution3(phone_book));
     }
 
 }
