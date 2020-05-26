@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.List;
 
 public class PhoneBook {
     /*
@@ -20,23 +21,81 @@ public class PhoneBook {
             --------------------------------------
             [119, 97674223, 1195524421]	    false
             [123,456,789]	                true
-            [12,123,1235,567,88]	           false
+            [12,123,1235,567,88]	        false
      */
 
-    public boolean solution(String[] phone_book) {
+
+    /**
+     * Solution1 : 단순 이중 Loop를 이용한 판별
+     *
+     * @param phone_book
+     * @return
+     */
+    public boolean solution1(String[] phone_book) {
         boolean answer = true;
+        List<String> phoneBooks = Arrays.asList(phone_book);
 
-        System.out.println("phone_book: " + Arrays.toString(phone_book));
+        for (int i = 0; i < phone_book.length; i++) {
+            // 선행 반복에서 answer가 false 된 경우 반복 종료
+            if(!answer){
+                break;
+            }
 
+
+            for (int j = 0; j < phone_book.length; j++) {
+                // 자기 자신이면  continue
+                if (i == j) {
+                    continue;
+                }
+
+                //  base가 target 보다 길면 continue
+                if (phone_book[i].length() > phone_book[j].length()) {
+                    continue;
+                }
+
+                // base가 target의 접두어인 경우 false 반환
+                if (phone_book[i].equals(phone_book[j].substring(0, phone_book[i].length()))) {
+                    answer = false;
+                    break;
+                }
+
+                System.out.println("base : " + phone_book[i] + ", target : " + phone_book[j]);
+            }
+        }
         return answer;
     }
 
+    /**
+     * Solution2 : solution1 리팩토링 (StartWith 사용)
+     *
+     * @param phone_book
+     * @return
+     */
+    public boolean solution2(String[] phone_book) {
+        for (int i = 0; i < phone_book.length; i++) {
+            for (int j = 0; j < phone_book.length; j++) {
+                // 자기 자신이면  continue
+                if (i == j) {
+                    continue;
+                }
 
-    public static void main(String[] args){
+                // base가 target의 접두어인 경우 false 반환
+                if (phone_book[j].startsWith(phone_book[i])) {
+                    return false;
+                }
 
+                //System.out.println("base : " + phone_book[i] + ", target : " + phone_book[j]);
+            }
+        }
+        return true;
+    }
+
+
+    public static void main(String[] args) {
         String[] phone_book = {"119", "97674223", "1195524421"};
         PhoneBook pb = new PhoneBook();
-        pb.solution(phone_book);
+        System.out.println("solution1 : " + pb.solution1(phone_book));
+        System.out.println("solution2 : " + pb.solution2(phone_book));
     }
 
 }
